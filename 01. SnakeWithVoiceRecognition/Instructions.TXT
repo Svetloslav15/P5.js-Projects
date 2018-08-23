@@ -1,0 +1,4 @@
+You can play with keyboard arrows, or you can use your voice to play
+if you say "up", snake will move up, if you say "down" snake move down.
+You can move also left and right when say "left", "right". If you want to start 
+a new game say "start"!
