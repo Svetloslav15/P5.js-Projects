@@ -1,0 +1,9 @@
+{
+  "name": "sockets_p5",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
+}
