@@ -4,6 +4,7 @@ class Obstacle {
         this.y = y;
         this.width = 50;
         this.height = 50;
+        this.speed = 2;
     }
 
     show() {
@@ -14,7 +15,8 @@ class Obstacle {
 
     update(boolean) {
         if (boolean){
-            this.y += 2;
+            this.speed = random(1, 3);
+            this.y += this.speed;
         }
         this.show();
     }

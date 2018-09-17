@@ -7,14 +7,16 @@ var s1;
 var s2;
 let bg;
 let refreshDiv;
+let pellets = [];
 
 function preload() {
     s1 = loadImage('./images/player1.gif');
     s2 = loadImage('./images/alien.gif');
     bg = loadImage('./images/maxresdefault.jpg');
 }
+
 function setup() {
-	createCanvas(windowWidth / 2 + 100, windowHeight / 2 + 200);
+    createCanvas(windowWidth / 2 + 100, windowHeight / 2 + 200);
     background(bg);
     player = new Player(width / 2, height - 60);
     for (let i = 0; i < 2; i++) {
@@ -30,39 +32,67 @@ function setup() {
 }
 
 function draw() {
-    if (boolean){
+    if (boolean) {
         $('#refreshDiv').hide();
     }
-    else{
+    else {
         $('#refreshDiv').show();
     }
     background(bg);
     player.show();
-    if (frameCount % 20 === 0){
+    if (frameCount % 20 === 0) {
         addNewObstacle(boolean);
     }
+    if (frameCount % 15 === 0) {
+        addNewPellet(boolean);
+    }
     for (let index = 0; index < obstacles.length; index++) {
-        obstacles[index].update(boolean);
-        if (checkHit(obstacles[index])){
+        let currentObstacle = obstacles[index];
+
+        for (let i = 0; i < pellets.length; i++) {
+            let currentPellet = pellets[i];
+            console.log(currentPellet + "<->" + currentObstacle + "index:" + index + " i: " + i);
+            if (currentObstacle.x <= currentPellet.x &&
+                currentObstacle.x + currentObstacle.width >= currentPellet.x &&
+                currentObstacle.y <= currentPellet.y &&
+                currentObstacle.y + currentObstacle.height >= currentPellet.y) {
+                obstacles.splice(index, 1);
+                pellets.splice(i, 1);
+                score++;
+            }
+        }
+        currentObstacle.update(boolean);
+
+        if (checkHit(currentObstacle)) {
             hitAnObstacle();
         }
-        if (obstacles[index].y >= height){
+        if (currentObstacle.y >= height) {
             obstacles.splice(index, 1);
-            score++;
+            index--;
         }
     }
-
-    if (keyIsDown(LEFT_ARROW) && boolean){
-    	player.update('left');
-	}
-	else if (keyIsDown(RIGHT_ARROW) && boolean){
-    	player.update('right');
-	}
-	$('#score').text(score);
+    for (let index = 0; index < pellets.length; index++) {
+        let currentPellet = pellets[index];
+        currentPellet.update();
+        if (currentPellet.y <= 0) {
+            pellets.splice(index, 1);
+            index--;
+            currentPellet = pellets[index];
+        }
+    }
+    if (keyIsDown(LEFT_ARROW) && boolean) {
+        player.update('left');
+    }
+    else if (keyIsDown(RIGHT_ARROW) && boolean) {
+        player.update('right');
+    }
+    $('#score').text(score);
 }
+
 function hitAnObstacle() {
     boolean = false;
 }
+
 function addNewObstacle(boolean) {
     if (boolean) {
         let x = random(0, width);
@@ -77,29 +107,37 @@ function checkHit(obstacle) {
     let playerCPoint = createVector(player.x, player.y + player.height);
     let playerDPoint = createVector(player.x + player.width, player.y + player.height);
 
-    if (playerAPoint.x >= obstacle.x && playerAPoint.x <= obstacle.x + obstacle.width &&
-        playerAPoint.y >= obstacle.y && playerAPoint.y <= obstacle.y + obstacle.height){
+    if (playerAPoint.x + 10 >= obstacle.x && playerAPoint.x - 10 <= obstacle.x + obstacle.width &&
+        playerAPoint.y - 10 >= obstacle.y && playerAPoint.y + 10 <= obstacle.y + obstacle.height) {
         return true;
     }
-    if (playerBPoint.x >= obstacle.x && playerBPoint.x <= obstacle.x + obstacle.width &&
-        playerBPoint.y >= obstacle.y && playerBPoint.y <= obstacle.y + obstacle.height){
-    return true;
-    }
-    if (playerCPoint.x >= obstacle.x && playerCPoint.x <= obstacle.x + obstacle.width &&
-        playerCPoint.y >= obstacle.y && playerCPoint.y <= obstacle.y + obstacle.height){
+    if (playerBPoint.x + 10 >= obstacle.x && playerBPoint.x - 10 <= obstacle.x + obstacle.width &&
+        playerBPoint.y - 10 >= obstacle.y && playerBPoint.y + 10 <= obstacle.y + obstacle.height) {
         return true;
     }
-    if (playerDPoint.x >= obstacle.x && playerDPoint.x <= obstacle.x + obstacle.width &&
-        playerDPoint.y >= obstacle.y && playerDPoint.y <= obstacle.y + obstacle.height){
+    if (playerCPoint.x + 10 >= obstacle.x && playerCPoint.x - 10 <= obstacle.x + obstacle.width &&
+        playerCPoint.y - 10 >= obstacle.y && playerCPoint.y + 10 <= obstacle.y + obstacle.height) {
+        return true;
+    }
+    if (playerDPoint.x + 10 >= obstacle.x && playerDPoint.x - 10 <= obstacle.x + obstacle.width &&
+        playerDPoint.y - 10 >= obstacle.y && playerDPoint.y + 10 <= obstacle.y + obstacle.height) {
         return true;
     }
     return false;
 }
+
 function keyPressed() {
-    if (keyCode === 13){
+    if (keyCode === 13) {
         boolean = true;
         obstacles.splice(0, obstacles.length);
         score = 0;
 
+    }
+}
+
+function addNewPellet(boolean) {
+    if (boolean) {
+        let pellet = new Pellet(player.x + player.width / 2, player.y);
+        pellets.push(pellet);
     }
 }
