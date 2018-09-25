@@ -1,0 +1,25 @@
+.title{
+    text-align: center;
+}
+.mew-form{
+    width: 50%;
+    margin: 0 auto;
+}
+.loading{
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+}
+.mews{
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+.mew{
+    padding: 1em;
+    border-radius: 10px;
+    border: 1px solid black;
+    background: #1EAEDB;
+    color: white;
+    margin-bottom: 1em;
+}
