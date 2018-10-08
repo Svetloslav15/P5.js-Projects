@@ -1,6 +1,6 @@
 const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
-const API_URL = 'http://localhost:5000/mews';
+const API_URL = 'http://localhost:1000/mews';
 const mewsElement = document.querySelector('.mews');
 
 loadingElement.style.display = "none";
